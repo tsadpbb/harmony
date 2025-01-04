@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { signOut } from "@/app/actions/auth";
 
 export default function AppSidebarFooter() {
   return (
@@ -27,7 +28,14 @@ export default function AppSidebarFooter() {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <span>Log out</span>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <button type="submit">Log out</button>
+              </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
