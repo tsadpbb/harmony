@@ -5,8 +5,10 @@ import { notFound, redirect } from "next/navigation";
 import { nanoid } from "nanoid";
 import { db } from "@/db";
 import { threads } from "@/db/schema";
-import { auth } from "./auth";
+import { auth, signIn } from "./auth";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { AuthError } from "next-auth";
 
 export async function newThread(formData: FormData) {
   const content = (formData.get("content") as string) ?? notFound();
@@ -25,9 +27,33 @@ export async function newThread(formData: FormData) {
     id: id,
     userId: userId,
     messages: messages,
+    title: content,
   });
 
   revalidatePath("/");
 
   redirect(`/search/${id}`);
+}
+
+export async function logIn(
+  prevMessage: { message: string; isError: boolean },
+  formData: FormData
+) {
+  const loginSchema = z.object({
+    email: z.string().email(),
+  });
+  const parse = loginSchema.safeParse({ email: formData.get("email") });
+
+  if (!parse.success) {
+    return { message: "Invalid Email", isError: true };
+  }
+
+  try {
+    await signIn("resend", { redirectTo: "/", email: parse.data.email });
+    return { message: "success", isError: false };
+  } catch (error) {
+    if (error instanceof AuthError)
+      return { message: "Authentication Error", isError: true };
+    throw error;
+  }
 }

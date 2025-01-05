@@ -1,5 +1,6 @@
 "use client";
-import { newThread } from "../actions/nav";
+
+import { newThread } from "../actions";
 
 export default function Home() {
   return (

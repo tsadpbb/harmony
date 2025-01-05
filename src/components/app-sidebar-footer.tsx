@@ -1,44 +1,38 @@
-import { ChevronsUpDown, User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
-import { signOut } from "@/app/actions/auth";
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./ui/sidebar";
+import { auth, signOut } from "@/app/actions/auth";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { redirect } from "next/navigation";
 
-export default function AppSidebarFooter() {
+export default async function AppSidebarFooter() {
+  const session = (await auth()) ?? redirect("/login");
+  const email = session.user?.email ?? "User";
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton>
-              <User />
-              User
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <span>Account</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut();
-                }}
-              >
-                <button type="submit">Log out</button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <SidebarMenuButton>
+          <User />
+          <span>{email}</span>
+        </SidebarMenuButton>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SidebarMenuAction
+              onClick={async () => {
+                "use server";
+                await signOut();
+              }}
+            >
+              <LogOut />
+            </SidebarMenuAction>
+          </TooltipTrigger>
+          <TooltipContent>Log out</TooltipContent>
+        </Tooltip>
       </SidebarMenuItem>
     </SidebarMenu>
   );

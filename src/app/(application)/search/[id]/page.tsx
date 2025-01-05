@@ -1,10 +1,11 @@
 import { db } from "@/db";
 import Chat from "./chat";
-import { Message } from "ai";
+import { CoreMessage } from "ai";
 import { threads } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/app/actions/auth";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { convertToUIMessages } from "@/lib/utils";
 
 export default async function Page({
   params,
@@ -14,14 +15,22 @@ export default async function Page({
   const id = (await params).id;
   const session = (await auth()) ?? redirect("/login");
   const userId = session.user?.id ?? redirect("/login");
-  const thread = (await db
+  const threadFromDB = (await db
     .select()
     .from(threads)
     .where(and(eq(threads.id, id), eq(threads.userId, userId)))) as {
     id: string;
     userId: string;
-    messages: Message[];
+    title: string;
+    messages: CoreMessage[];
   }[];
 
-  return <Chat id={thread[0].id} initialMessages={thread[0].messages} />;
+  if (threadFromDB.length == 0) notFound();
+
+  const thread = {
+    ...threadFromDB[0],
+    messages: convertToUIMessages(threadFromDB[0].messages),
+  };
+
+  return <Chat id={thread.id} initialMessages={thread.messages} />;
 }

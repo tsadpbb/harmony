@@ -13,6 +13,7 @@ import type { AdapterAccountType } from "next-auth/adapters";
 export const threads = pgTable("threads", {
   id: varchar({ length: 255 }).primaryKey(),
   messages: jsonb(),
+  title: text().notNull(),
   userId: text().notNull(),
 });
 

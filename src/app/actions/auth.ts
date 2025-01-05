@@ -4,11 +4,7 @@ import Resend from "next-auth/providers/resend";
 import { db } from "@/db";
 import { accounts, sessions, users, verificationTokens } from "@/db/schema";
 
-// *DO NOT* create a `Pool` here, outside the request handler.
-// Neon's Postgres cannot keep a pool alive between requests.
-
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
-  // Create a `Pool` inside the request handler.
   return {
     adapter: DrizzleAdapter(db, {
       usersTable: users,
@@ -23,6 +19,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     ],
     pages: {
       signIn: "/login",
+      verifyRequest: "/login/verify-request",
     },
     callbacks: {
       authorized: async ({ auth }) => {

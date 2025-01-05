@@ -32,6 +32,7 @@ export default async function AppSidebar() {
     .where(eq(threads.userId, userId))) as {
     id: string;
     userId: string;
+    title: string;
     messages: Message[];
   }[];
 
@@ -62,7 +63,9 @@ export default async function AppSidebar() {
                     return (
                       <SidebarMenuSubItem key={thread.id}>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/search/${thread.id}`}>{thread.id}</Link>
+                          <Link href={`/search/${thread.id}`}>
+                            <span>{thread.title}</span>
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     );
