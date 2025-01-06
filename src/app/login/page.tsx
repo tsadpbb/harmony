@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useActionState } from "react";
 import { logIn } from "../actions";
+import { LoaderCircle } from "lucide-react";
 
 export default function Login() {
-  const [state, formAction] = useActionState(logIn, {
+  const [state, formAction, isPending] = useActionState(logIn, {
     message: "",
     isError: false,
   });
@@ -22,7 +23,9 @@ export default function Login() {
         )}
         <Input type="text" name="email" placeholder="Email" />
       </div>
-      <Button type="submit">Sign In</Button>
+      <Button disabled={isPending} type="submit">
+        {isPending ? <LoaderCircle className="animate-spin" /> : "Sign In"}
+      </Button>
     </form>
   );
 }
