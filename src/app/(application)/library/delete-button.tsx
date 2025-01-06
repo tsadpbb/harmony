@@ -1,12 +1,17 @@
 "use client";
 import { deleteThread } from "@/app/actions";
 import { Button } from "@/components/ui/button";
-import { Delete } from "lucide-react";
+import { Delete, LoaderCircle } from "lucide-react";
+import { useTransition } from "react";
 
 export function DeleteButton({ id }: { id: string }) {
-  const deleteAction = async () => {
-    await deleteThread({ id: id });
-  };
+  const [isPending, startTransition] = useTransition();
+
+  function deleteAction() {
+    startTransition(async () => {
+      await deleteThread({ id: id });
+    });
+  }
 
   return (
     <Button
@@ -14,7 +19,7 @@ export function DeleteButton({ id }: { id: string }) {
       onClick={deleteAction}
       className="h-10 w-10 ml-auto"
     >
-      <Delete />
+      {isPending ? <LoaderCircle className="animate-spin" /> : <Delete />}
     </Button>
   );
 }

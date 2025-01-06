@@ -17,6 +17,7 @@ export default async function Page() {
 
   return (
     <div className="flex p-4 gap-4 flex-col w-full items-center">
+      {userThreads.length == 0 && <div>No threads saved</div>}
       {userThreads.map((thread) => {
         return (
           <Card

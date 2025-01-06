@@ -8,6 +8,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { Sources } from "./sources";
 import { exa } from "@agentic/exa";
 import { cn } from "@/lib/utils";
+import { LoaderCircle } from "lucide-react";
 
 export default function Chat({
   id,
@@ -108,13 +109,17 @@ export default function Chat({
         ))}
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        className="fixed flex rounded-md border border-input items-center bor bottom-0 w-full max-w-2xl p-2 mb-8"
+        onSubmit={handleSubmit}
+      >
         <Input
-          className="fixed bottom-0 mx-auto w-full max-w-2xl p-2 mb-8"
+          className="border-none focus-visible:ring-0"
           value={input}
           placeholder="Say something..."
           onChange={handleInputChange}
         />
+        {isLoading && <LoaderCircle className="animate-spin" />}
       </form>
     </div>
   );
