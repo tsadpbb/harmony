@@ -32,7 +32,6 @@ export default function Chat({
 
   useEffect(() => {
     if (messages[messages.length - 1].role == "user" && !isLoading) {
-      console.log("HLEP");
       reload();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
