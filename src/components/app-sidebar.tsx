@@ -40,13 +40,15 @@ export default async function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <AlignVerticalJustifyEnd />
-            Harmony
-          </SidebarMenuButton>
-          <ThemeToggle />
-        </SidebarMenuItem>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <AlignVerticalJustifyEnd />
+              Harmony
+            </SidebarMenuButton>
+            <ThemeToggle />
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
