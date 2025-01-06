@@ -7,6 +7,7 @@ import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { Sources } from "./sources";
 import { exa } from "@agentic/exa";
+import { cn } from "@/lib/utils";
 
 export default function Chat({
   id,
@@ -40,7 +41,7 @@ export default function Chat({
     <div className="flex flex-col w-full max-w-2xl py-24 mx-auto stretch">
       <div className="space-y-4">
         {messages.map((message) => (
-          <div key={message.id} className="whitespace-pre-wrap">
+          <div key={message.id} className="whitespace-normal">
             <div>
               {message.toolInvocations?.map((tool) => {
                 if (tool.toolName == "exa_search") {
@@ -63,7 +64,7 @@ export default function Chat({
                   )
                 : message.content.length > 0 && (
                     <Markdown
-                      className="mb-10"
+                      className="mb-10 flex flex-col gap-4"
                       components={{
                         code(props) {
                           const { children, className, ...rest } = props;
@@ -80,6 +81,21 @@ export default function Chat({
                             <code {...rest} className={className}>
                               {children}
                             </code>
+                          );
+                        },
+                        a(props) {
+                          const { children, className, ...rest } = props;
+                          return (
+                            <a
+                              {...rest}
+                              className={cn(
+                                "text-sky-400 underline",
+                                className
+                              )}
+                              target="_blank"
+                            >
+                              {children}
+                            </a>
                           );
                         },
                       }}
