@@ -9,6 +9,7 @@ import { auth, signIn } from "./auth";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { AuthError } from "next-auth";
+import { and, eq } from "drizzle-orm";
 
 export async function newThread(formData: FormData) {
   const content = (formData.get("content") as string) ?? notFound();
@@ -33,6 +34,17 @@ export async function newThread(formData: FormData) {
   revalidatePath("/");
 
   redirect(`/search/${id}`);
+}
+
+export async function deleteThread({ id }: { id: string }) {
+  const session = (await auth()) ?? redirect("/login");
+  const userId = session.user?.id ?? redirect("/login");
+
+  await db
+    .delete(threads)
+    .where(and(eq(threads.id, id), eq(threads.userId, userId)));
+
+  revalidatePath("/");
 }
 
 export async function logIn(

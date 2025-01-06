@@ -1,4 +1,4 @@
-import { Home, Library } from "lucide-react";
+import { AlignVerticalJustifyEnd, Home, Library } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,7 @@ import { eq } from "drizzle-orm";
 import { Message } from "ai";
 import { auth } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 export default async function AppSidebar() {
   const session = (await auth()) ?? redirect("/login");
@@ -37,8 +38,16 @@ export default async function AppSidebar() {
   }[];
 
   return (
-    <Sidebar>
-      <SidebarHeader>Harmony</SidebarHeader>
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenuItem>
+          <SidebarMenuButton>
+            <AlignVerticalJustifyEnd />
+            Harmony
+          </SidebarMenuButton>
+          <ThemeToggle />
+        </SidebarMenuItem>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
